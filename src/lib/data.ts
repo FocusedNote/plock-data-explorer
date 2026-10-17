@@ -1,4 +1,4 @@
-// UWAGA: wszystkie wartości są DANYMI PRZYKŁADOWYMI (syntetycznymi), nie są to prawdziwe statystyki.
+// Katalog wskaźników i regionów; oficjalne wartości są pobierane z API BDL.
 export type CategoryId = "demografia" | "transport" | "srodowisko" | "gospodarka" | "edukacja" | "jakosc";
 
 export const CATEGORIES: { id: CategoryId; name: string }[] = [
@@ -71,6 +71,9 @@ export interface DataRow {
   indicator: string;
   year: number;
   value: number;
+  source?: string;
+  variableId?: number;
+  attributeId?: number;
 }
 
 function hash(s: string) {
