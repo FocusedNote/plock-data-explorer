@@ -23,8 +23,8 @@ function Compare() {
   const { get, years } = useData();
   const [a, setA] = useState("plock");
   const [b, setB] = useState("gostynin");
-  const [y1, setY1] = useState(years[0]);
-  const [y2, setY2] = useState(years[years.length - 1]);
+  const [y1, setY1] = useState(years[0] ?? 2015);
+  const [y2, setY2] = useState(years[years.length - 1] ?? 2024);
   const [cat, setCat] = useState<string>("all");
   const [focus, setFocus] = useState("wynagrodzenie");
   const na = REGIONS.find((r) => r.id === a)!.name, nb = REGIONS.find((r) => r.id === b)!.name;

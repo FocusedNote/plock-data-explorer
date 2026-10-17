@@ -20,7 +20,7 @@ const KEYS = ["firmy", "wynagrodzenie", "bezrobocie", "drogi", "przedszkola", "m
 
 function Business() {
   const { get, years } = useData();
-  const y = years[years.length - 1];
+  const y = years[years.length - 1] ?? 2024;
   const [r, setR] = useState("plock");
   const score = (reg: string, id: string) => {
     const ind = INDICATORS.find((i) => i.id === id)!;

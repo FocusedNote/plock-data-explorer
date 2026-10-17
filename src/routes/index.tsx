@@ -19,7 +19,7 @@ const KEY = ["ludnosc", "wynagrodzenie", "bezrobocie", "pm10", "rowery", "mieszk
 
 function Home() {
   const { get, series, years } = useData();
-  const first = years[0], last = years[years.length - 1];
+  const first = years[0] ?? 2015, last = years[years.length - 1] ?? 2024;
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
       <section className="hero-surface rounded-3xl p-8 md:p-12">

@@ -9,11 +9,11 @@ type S = { wskaznik?: string | undefined; kategoria?: CategoryId | undefined; re
 
 export const Route = createFileRoute("/eksplorator")({
   validateSearch: (s: Record<string, unknown>): S => ({
-    wskaznik: typeof s.wskaznik === "string" ? s.wskaznik : undefined,
-    kategoria: typeof s.kategoria === "string" ? (s.kategoria as CategoryId) : undefined,
-    regiony: typeof s.regiony === "string" ? s.regiony : undefined,
-    od: s.od ? Number(s.od) : undefined,
-    do: s.do ? Number(s.do) : undefined,
+    wskaznik: typeof s["wskaznik"] === "string" ? s["wskaznik"] : undefined,
+    kategoria: typeof s["kategoria"] === "string" ? (s["kategoria"] as CategoryId) : undefined,
+    regiony: typeof s["regiony"] === "string" ? s["regiony"] : undefined,
+    od: s["od"] ? Number(s["od"]) : undefined,
+    do: s["do"] ? Number(s["do"]) : undefined,
   }),
   head: () => ({
     meta: [
@@ -37,9 +37,9 @@ function Explorer() {
 
   const cat = s.kategoria ?? INDICATORS.find((i) => i.id === s.wskaznik)?.category ?? "demografia";
   const list = INDICATORS.filter((i) => i.category === cat);
-  const ind = list.find((i) => i.id === s.wskaznik) ?? list[0];
+  const ind = list.find((i) => i.id === s.wskaznik) ?? list[0] ?? INDICATORS[0]!;
   const regions = s.regiony ? s.regiony.split(",").filter((r) => REGIONS.some((x) => x.id === r)) : ["plock", "gostynin", "sierpc"];
-  const y1 = s.od ?? years[0], y2 = s.do ?? years[years.length - 1];
+  const y1 = s.od ?? years[0] ?? 2015, y2 = s.do ?? years[years.length - 1] ?? 2024;
 
   const toggle = (id: string) => {
     const next = regions.includes(id) ? regions.filter((r) => r !== id) : [...regions, id].slice(-5);
@@ -107,7 +107,7 @@ function Explorer() {
                 <YAxis tickFormatter={(v) => fmt(v)} width={64} domain={["auto", "auto"]} />
                 <Tooltip formatter={(v, n) => [fmt(Number(v)), name(String(n))]} />
                 <Legend formatter={(v) => name(String(v))} />
-                {regions.map((r, i) => <Line key={r} dataKey={r} stroke={COLORS[i % 5]} strokeWidth={3} dot={{ r: 3 }} />)}
+                {regions.map((r, i) => <Line key={r} dataKey={r} stroke={COLORS[i % 5]!} strokeWidth={3} dot={{ r: 3 }} />)}
               </LineChart>
             </ResponsiveContainer>
           </div>
