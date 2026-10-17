@@ -4,7 +4,7 @@ import { generateSampleData, INDICATORS, REGIONS, type DataRow } from "./data";
 interface Ctx {
   rows: DataRow[];
   source: string;
-  get: (region: string, indicator: string, year: number) => number | undefined;
+  get: (region: string, indicator: string, year: number | undefined) => number | undefined;
   series: (region: string, indicator: string) => { year: number; value: number }[];
   years: number[];
   importRows: (rows: DataRow[], source: string) => void;
@@ -23,7 +23,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return m;
   }, [rows]);
   const years = useMemo(() => [...new Set(rows.map((r) => r.year))].sort((a, b) => a - b), [rows]);
-  const get = useCallback((r: string, i: string, y: number) => index.get(`${r}|${i}|${y}`), [index]);
+  const get = useCallback((r: string, i: string, y: number | undefined) => index.get(`${r}|${i}|${y}`), [index]);
   const series = useCallback(
     (r: string, i: string) =>
       years.map((y) => ({ year: y, value: index.get(`${r}|${i}|${y}`) })).filter((p): p is { year: number; value: number } => p.value !== undefined),
@@ -69,10 +69,10 @@ export function parseRecords(records: Record<string, unknown>[]): { rows: DataRo
   let skipped = 0;
   for (const rec of records) {
     const k = Object.fromEntries(Object.entries(rec).map(([a, b]) => [norm(a), b]));
-    const region = resolve(REGIONS, k.region);
-    const indicator = resolve(INDICATORS, k.wskaznik ?? k.indicator);
-    const year = Number(k.rok ?? k.year);
-    const value = Number(String(k.wartosc ?? k.value ?? "").replace(",", "."));
+    const region = resolve(REGIONS, k["region"]);
+    const indicator = resolve(INDICATORS, k["wskaznik"] ?? k["indicator"]);
+    const year = Number(k["rok"] ?? k["year"]);
+    const value = Number(String(k["wartosc"] ?? k["value"] ?? "").replace(",", "."));
     if (region && indicator && Number.isFinite(year) && Number.isFinite(value)) rows.push({ region, indicator, year, value });
     else skipped++;
   }
@@ -87,6 +87,6 @@ export async function parseFile(buf: ArrayBuffer, name: string) {
   const XLSX = await import("xlsx");
   const wb = XLSX.read(buf, { type: "array" });
   const all: Record<string, unknown>[] = [];
-  wb.SheetNames.forEach((s) => all.push(...XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[s])));
+  wb.SheetNames.forEach((s) => all.push(...XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[s]!)));
   return parseRecords(all);
 }

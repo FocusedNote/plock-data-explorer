@@ -5,7 +5,7 @@ import { CATEGORIES, INDICATORS, REGIONS, fmt, fmtPct, pct, type CategoryId } fr
 import { useData } from "@/lib/store";
 import { downloadCsv } from "@/lib/csv";
 
-type S = { wskaznik?: string; kategoria?: CategoryId; regiony?: string; od?: number; do?: number };
+type S = { wskaznik?: string | undefined; kategoria?: CategoryId | undefined; regiony?: string | undefined; od?: number | undefined; do?: number | undefined };
 
 export const Route = createFileRoute("/eksplorator")({
   validateSearch: (s: Record<string, unknown>): S => ({
